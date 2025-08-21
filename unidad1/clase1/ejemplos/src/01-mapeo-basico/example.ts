@@ -19,10 +19,12 @@ function initializeDatabase(db: Database.Database): void {
 }
 
 function insertPeople(db: Database.Database, people: Person[]): number[] {
+  console.log("   • Inicializando transacción...");
   const insert = db.prepare(
     `INSERT INTO person (name, lastName, age) VALUES (@name, @lastName, @age)`
   );
   const transaction = db.transaction((rows: Person[]) => {
+    console.log(`   • Insertando ${rows.length} personas...`)
     return rows.map((row) => insert.run(row).lastInsertRowid as number);
   });
   return transaction(people);
